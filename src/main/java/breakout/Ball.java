@@ -12,4 +12,30 @@ public class Ball {
 		xVelocity = 0;
 		yVelocity = -1;
 	}
+
+	public double getxPosition() {
+		return xPosition;
+	}
+	public void setxPosition(double xPosition) {
+		this.xPosition = xPosition;
+	}
+	public double getyPosition() {
+		return yPosition;
+	}
+	public void setyPosition(double yPosition) {
+		this.yPosition = yPosition;
+	}
+	public double getxVelocity() {
+		return xVelocity;
+	}
+	public void setxVelocity(double xVelocity) {
+		this.xVelocity = xVelocity;
+	}
+	public double getyVelocity() {
+		return yVelocity;
+	}
+	public void setyVelocity(double yVelocity) {
+		this.yVelocity = yVelocity;
+	}
+	
 }
