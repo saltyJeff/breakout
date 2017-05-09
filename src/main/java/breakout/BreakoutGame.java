@@ -24,7 +24,7 @@ public class BreakoutGame implements Runnable {
 			if(System.currentTimeMillis() < lastTick + TICK_DELTA) {
 				continue; //not time for an update
 			}
-			callback.onUpdate(blocks, null);
+			callback.onUpdate(blocks, null); //placeholder
 			lastTick = System.currentTimeMillis();
 		}
 	}
