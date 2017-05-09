@@ -1,0 +1,10 @@
+public class breakOutTable extends JTable{
+    public breakOutTable(){
+        super();
+    }
+    
+    public updateBlocks(int [][] board){
+        
+    }
+
+}
