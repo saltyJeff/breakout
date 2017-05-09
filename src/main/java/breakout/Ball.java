@@ -5,7 +5,7 @@ public class Ball {
 	private double yPosition;
 	private double xVelocity;
 	private double yVelocity;
-	private static final double WIDTH = 0.25;
+	public static final double RADIUS = 0.1;
 	public Ball () {
 		xPosition = 10;
 		yPosition = 10;
