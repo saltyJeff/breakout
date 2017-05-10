@@ -5,8 +5,8 @@ public class BreakoutGame implements Runnable {
 	private long lastTick = System.currentTimeMillis();
 	private int[][] blocks;
 	public static final double TICK_DELTA = 0.04; // 25 ticks per second
-	public static final int BOARD_WIDTH = 20;
-	public static final int BOARD_HEIGHT = 30;
+	public static final int BOARD_WIDTH = 5;
+	public static final int BOARD_HEIGHT = 7;
 	private Ball ball;
 
 	public BreakoutGame(BreakoutCallbacks bc) {
@@ -16,11 +16,15 @@ public class BreakoutGame implements Runnable {
 	}
 
 	public void run() {
-		for (int i = BOARD_HEIGHT / 2; i < BOARD_HEIGHT; i++) {
+		/*for (int i = BOARD_HEIGHT / 2; i < BOARD_HEIGHT; i++) {
 			for (int j = 0; j < BOARD_WIDTH; j++) {
 				blocks[i][j] = i - BOARD_HEIGHT / 2 + 1;
 			}
+		}*/ //normal setup
+		for(int i = 0; i < BOARD_WIDTH; i++) {
+			blocks[BOARD_HEIGHT - 1][i] = 5;
 		}
+		System.out.println(this);
 		callback.ready();
 		while (true) { // edgy
 			if (System.currentTimeMillis() < lastTick + TICK_DELTA * 1000) {
@@ -39,17 +43,18 @@ public class BreakoutGame implements Runnable {
 		reflectOpt = collisionCheck();
 		switch (reflectOpt) {
 		case 1:
-			ball.invertXVector();
+			ball.invertAndShiftX();
 			break;
 		case 2:
-			ball.invertYVector();
+			ball.invertAndShiftY();
 			break;
 		case 3:
-			ball.invertBoth();
+			ball.invertAndShiftBoth();
 			break;
 		default:
 			break;
 		}
+		System.out.println(ball);
 	}
 
 	private int collisionCheck() {
@@ -61,11 +66,15 @@ public class BreakoutGame implements Runnable {
 		int col;
 		int block;
 		for (Vector v : bounds) {
-			row = (int) (v.y);
+			row = BOARD_HEIGHT - (int) (v.y);
 			col = (int) (v.x);
 			block = blocks[row][col];
-			if (block == 0)
+			System.out.println("Looking at: ("+row+","+col+"); value: "+block);
+
+			if (block == 0) {
 				continue;
+			}
+			blocks[row][col]--;
 			Vector blockPos = new Vector(col + 0.5, row + 0.5);
 			double xDist = Math.abs(blockPos.x - v.x);
 			double yDist = Math.abs(blockPos.y - v.y);
@@ -78,5 +87,23 @@ public class BreakoutGame implements Runnable {
 			}
 		}
 		return 0;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for(int[] row : blocks) {
+			sb.append('|');
+			for(int n : row) {
+				if(n != 0) {
+					sb.append("["+n+"]");
+				}
+				else {
+					sb.append("   ");
+				}
+			}
+			sb.append("|\n");
+		}
+		return sb.toString();
 	}
 }
