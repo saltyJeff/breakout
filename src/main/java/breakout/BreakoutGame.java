@@ -4,12 +4,14 @@ public class BreakoutGame implements Runnable {
 	private BreakoutCallbacks callback;
 	private long lastTick = System.currentTimeMillis();
 	private int[][] blocks;
-	private static final long TICK_DELTA = 40; //25 ticks per second
-	private static final int BOARD_WIDTH = 20;
-	private static final int BOARD_HEIGHT = 20;
-
+	public static final double TICK_DELTA = 0.04; //25 ticks per second
+	public static final int BOARD_WIDTH = 20;
+	public static final int BOARD_HEIGHT = 30;
+	private Ball ball;
+	
 	public BreakoutGame(BreakoutCallbacks bc) {
 		callback = bc;
+		ball = new Ball();
 	}
 	public void run () {
 		blocks = new int[BOARD_HEIGHT][];
@@ -21,11 +23,15 @@ public class BreakoutGame implements Runnable {
 		}
 		callback.ready();
 		while (true) { //edgy
-			if(System.currentTimeMillis() < lastTick + TICK_DELTA) {
+			if(System.currentTimeMillis() < lastTick + TICK_DELTA*1000) {
 				continue; //not time for an update
 			}
-			callback.onUpdate(blocks, null); //placeholder
+			simulate();
+			callback.onUpdate(blocks, ball); //placeholder
 			lastTick = System.currentTimeMillis();
 		}
+	}
+	private void simulate () {
+		ball.goToNext();
 	}
 }

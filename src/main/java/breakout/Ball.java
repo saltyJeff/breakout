@@ -1,41 +1,26 @@
 package breakout;
 
 public class Ball {
-	private double xPosition;
-	private double yPosition;
-	private double xVelocity;
-	private double yVelocity;
+	public Vector position;
+	public Vector velocity;
 	public static final double RADIUS = 0.1;
 	public Ball () {
-		xPosition = 10;
-		yPosition = 10;
-		xVelocity = 0;
-		yVelocity = -1;
+		position = new Vector(BreakoutGame.BOARD_WIDTH/2, 2);
+		velocity = Vector.DOWN;
 	}
-
-	public double getxPosition() {
-		return xPosition;
+	public Vector[] getBounds () {
+		Vector[] arr = new Vector[4];
+		arr[0] = position.add(Vector.TOPLEFT.multiply(BreakoutGame.TICK_DELTA));
+		arr[0] = position.add(Vector.TOPRIGHT.multiply(BreakoutGame.TICK_DELTA));
+		arr[0] = position.add(Vector.BOTLEFT.multiply(BreakoutGame.TICK_DELTA));
+		arr[0] = position.add(Vector.BOTRIGHT.multiply(BreakoutGame.TICK_DELTA));
+		return arr;
 	}
-	public void setxPosition(double xPosition) {
-		this.xPosition = xPosition;
+	public void goToNext () {
+		position = position.add(velocity.multiply(BreakoutGame.TICK_DELTA));
 	}
-	public double getyPosition() {
-		return yPosition;
+	@Override
+	public String toString() {
+		return "The ball is at: "+position.toString();
 	}
-	public void setyPosition(double yPosition) {
-		this.yPosition = yPosition;
-	}
-	public double getxVelocity() {
-		return xVelocity;
-	}
-	public void setxVelocity(double xVelocity) {
-		this.xVelocity = xVelocity;
-	}
-	public double getyVelocity() {
-		return yVelocity;
-	}
-	public void setyVelocity(double yVelocity) {
-		this.yVelocity = yVelocity;
-	}
-	
 }
