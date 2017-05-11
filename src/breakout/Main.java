@@ -3,12 +3,13 @@ import java.awt.event.*;
 
 import javax.swing.*;
 public class Main {
-	static Thread thread;
-	private static Timer timer = new Timer(1000/30, new ActionListener () { //30 ticks a second
+	private static Thread thread;
+	private static Timer timer = new Timer(Config.RENDER_TICK, new ActionListener () { //30 ticks a second
 		public void actionPerformed(ActionEvent e) {
 			graphicUpdate();
 		}
 	});
+	private static BreakoutGame bg;
 	private static BreakoutPanel breakoutPanel;
 	public static void main(String[] args) {
 		//init swing stuff
@@ -30,7 +31,7 @@ public class Main {
 		timer.start();
 		
 		//init game stuff
-		BreakoutGame bg = new BreakoutGame(callbacks);
+		bg = new BreakoutGame(callbacks);
 		thread = new Thread(bg);
 		thread.start();
 		
@@ -43,7 +44,8 @@ public class Main {
 			//System.out.println("We have signs of life");
 		}
 		public void onUpdate (int[][] newBoard, Ball newBall) {
-			//System.out.println("Heartbeat");
+			System.out.println(bg);
+			System.out.println(newBall);
 		}
 	};
 	private static final JTextField txtWhatACool = new JTextField();

@@ -4,15 +4,13 @@ public class BreakoutGame implements Runnable {
 	private BreakoutCallbacks callback;
 	private long lastTick = System.currentTimeMillis();
 	private int[][] blocks;
-	public static final double TICK_DELTA = 0.04; // 25 ticks per second
-	public static final int BOARD_WIDTH = 5;
-	public static final int BOARD_HEIGHT = 7;
+	public static final double DELTA_TICK = Config.PHYSICS_TICK / 1000.0; // 25 ticks per second
 	private Ball ball;
 
 	public BreakoutGame(BreakoutCallbacks bc) {
 		callback = bc;
 		ball = new Ball();
-		blocks = new int[BOARD_HEIGHT][BOARD_WIDTH];
+		blocks = new int[Config.BOARD_HEIGHT][Config.BOARD_WIDTH];
 	}
 
 	public void run() {
@@ -21,13 +19,13 @@ public class BreakoutGame implements Runnable {
 				blocks[i][j] = i - BOARD_HEIGHT / 2 + 1;
 			}
 		}*/ //normal setup
-		for(int i = 0; i < BOARD_WIDTH; i++) {
-			blocks[BOARD_HEIGHT - 1][i] = 5;
+		//<CUSTOM TESTING SETUP>
+		for(int i = 0; i < Config.BOARD_WIDTH; i++) {
+			blocks[Config.BOARD_HEIGHT - 1][i] = 5;
 		}
-		System.out.println(this);
 		callback.ready();
 		while (true) { // edgy
-			if (System.currentTimeMillis() < lastTick + TICK_DELTA * 1000) {
+			if (System.currentTimeMillis() < lastTick + DELTA_TICK) {
 				continue; // not time for an update
 			}
 			simulate();
@@ -54,7 +52,6 @@ public class BreakoutGame implements Runnable {
 		default:
 			break;
 		}
-		System.out.println(ball);
 	}
 
 	private int collisionCheck() {
@@ -66,10 +63,9 @@ public class BreakoutGame implements Runnable {
 		int col;
 		int block;
 		for (Vector v : bounds) {
-			row = BOARD_HEIGHT - (int) (v.y);
+			row = Config.BOARD_HEIGHT - (int) (v.y);
 			col = (int) (v.x);
 			block = blocks[row][col];
-			System.out.println("Looking at: ("+row+","+col+"); value: "+block);
 
 			if (block == 0) {
 				continue;
