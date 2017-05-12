@@ -3,13 +3,12 @@ package breakout;
 public class BreakoutGame implements Runnable {
 	private BreakoutCallbacks callback;
 	private long lastTick = System.currentTimeMillis();
-	private static int[][] blocks;
+	public static int[][] blocks = new int[Config.BOARD_HEIGHT][Config.BOARD_WIDTH];
 	private static Ball ball;
 
 	public BreakoutGame(BreakoutCallbacks bc) {
 		callback = bc;
 		ball = new Ball();
-		blocks = new int[Config.BOARD_HEIGHT][Config.BOARD_WIDTH];
 	}
 
 	public void run() {

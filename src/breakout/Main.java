@@ -25,6 +25,8 @@ public class Main {
 		// init swing stuff
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setTitle("Breakout");
+		frame.setResizable(false);
 		Container p = frame.getContentPane();
 		p.setPreferredSize(Config.DIMENSIONS);
 		p.setLayout(null);
@@ -39,18 +41,16 @@ public class Main {
 		
 		frame.pack();
 		frame.setVisible(true);
-		timer.start();
 
 		// init game stuff
 		bg = new BreakoutGame(callbacks);
 		thread = new Thread(bg);
 		thread.start();
-
+		timer.start();
 	}
 
 	private static void graphicUpdate() {
 		ballPanel.repaint();
-		blockPanel.repaint();
 	}
 
 	private static BreakoutCallbacks callbacks = new BreakoutCallbacks() {
@@ -60,6 +60,7 @@ public class Main {
 
 		public void onUpdate(int[][] newBoard, Vector ballPos, Vector ballVel) {
 			ballPanel.updateInfo(ballPos, ballVel);
+			blockPanel.repaint();
 		}
 	};
 }

@@ -17,7 +17,7 @@ public class BlockPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D graphics = (Graphics2D) g;
-		graphics.setStroke(new BasicStroke(0));
+		graphics.setStroke(new BasicStroke(1));
 		for (int r = Config.BOARD_HEIGHT-1; r >= 0; r--) {
 			for (int c = Config.BOARD_WIDTH; c >= 0; c--) {
 				g.drawRect(c*Config.JPC, r*Config.JPC, Config.JPC, Config.JPC);
