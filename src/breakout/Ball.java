@@ -5,8 +5,8 @@ public class Ball {
 	public Vector velocity;
 
 	public Ball() {
-		position = new Vector(Config.BOARD_WIDTH / 2, 2);
-		velocity = Vector.DOWN.multiply(0.01);
+		position = Config.INITIAL_POS;
+		velocity = Config.INITIAL_VEL;
 	}
 
 	public Vector[] getBounds() {
@@ -20,7 +20,7 @@ public class Ball {
 
 	public void goToNext() {
 		position = position
-				.add(velocity.multiply(Config.PHYSICS_TICK / 1000.0));
+				.add(velocity.multiply(Config.PHYSICS_DELTA));
 	}
 
 	@Override
@@ -30,13 +30,13 @@ public class Ball {
 	}
 
 	public void invertAndShiftX() {
-		velocity.x = velocity.x * -1;
-		position = position.add(Vector.RIGHT.multiply(velocity.x * (Config.BALL_RADIUS + 0.0001)));
+		velocity.x = velocity.x * -1.0;
+		position = position.add(Vector.LEFT.multiply(velocity.x * (Config.BALL_RADIUS + 0.000001)));
 	}
 
 	public void invertAndShiftY() {
-		velocity.y = velocity.y * -1;
-		position = position.add(Vector.UP.multiply(velocity.y * (Config.BALL_RADIUS + 0.0001)));
+		velocity.y = velocity.y * -1.0;
+		position = position.add(Vector.UP.multiply(velocity.y * (Config.BALL_RADIUS + 0.000001)));
 	}
 
 	public void invertAndShiftBoth() {

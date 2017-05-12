@@ -17,12 +17,13 @@ public class Main {
 				graphicUpdate();
 			}
 	});
+	private static JFrame frame;
 	private static BreakoutGame bg;
 	private static BallPanel ballPanel;
 	private static BlockPanel blockPanel;
 	public static void main(String[] args) {
 		// init swing stuff
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		Container p = frame.getContentPane();
 		p.setPreferredSize(Config.DIMENSIONS);

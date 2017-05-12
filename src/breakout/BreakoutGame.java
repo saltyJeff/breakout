@@ -22,10 +22,9 @@ public class BreakoutGame implements Runnable {
 		for (int i = 0; i < Config.BOARD_WIDTH; i++) {
 			blocks[Config.BOARD_HEIGHT - 1][i] = 5;
 		}
-		System.out.println(blocks);
 		callback.ready();
 		while (true) { // edgy
-			if (System.currentTimeMillis() < lastTick + Config.PHYSICS_DELTA) {
+			if (System.currentTimeMillis() < lastTick + Config.PHYSICS_TICK) {
 				continue; // not time for an update
 			}
 			simulate();
@@ -66,10 +65,10 @@ public class BreakoutGame implements Runnable {
 		int row;
 		int col;
 		for (Vector v : bounds) {
-			row = Config.BOARD_HEIGHT - (int) (v.y);
+			row = Config.BOARD_HEIGHT - 1 - (int) (v.y);
 			col = (int) (v.x);
-			boolean outOfRow = !(0 <= row && row < Config.BOARD_HEIGHT);
-			boolean outOfCol = !(0 <= col && col < Config.BOARD_WIDTH);
+			boolean outOfRow = v.y < 0 || !(0 <= row && row < Config.BOARD_HEIGHT); //floor negative number = rounding up??
+			boolean outOfCol = v.x < 0 || !(0 <= col && col < Config.BOARD_WIDTH);
 			if (outOfRow && outOfCol) {
 				return 3;
 			} else if (outOfRow) {
@@ -92,7 +91,7 @@ public class BreakoutGame implements Runnable {
 		int col;
 		int block;
 		for (Vector v : bounds) {
-			row = Config.BOARD_HEIGHT - (int) (v.y);
+			row = Config.BOARD_HEIGHT - 1 - (int) (v.y);
 			col = (int) (v.x);
 			block = blocks[row][col];
 
