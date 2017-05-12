@@ -8,19 +8,20 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-
 public class Main {
+
 	private static Thread thread;
 	private static Timer timer = new Timer(Config.RENDER_TICK,
 		new ActionListener() { // 30 ticks a second
 			public void actionPerformed(ActionEvent e) {
 				graphicUpdate();
 			}
-	});
+		});
 	private static JFrame frame;
 	private static BreakoutGame bg;
 	private static BallPanel ballPanel;
 	private static BlockPanel blockPanel;
+
 	public static void main(String[] args) {
 		// init swing stuff
 		frame = new JFrame();
@@ -30,15 +31,15 @@ public class Main {
 		Container p = frame.getContentPane();
 		p.setPreferredSize(Config.DIMENSIONS);
 		p.setLayout(null);
-		p.setBackground(new Color(49,237,237));
-		
+		p.setBackground(Color.WHITE);
+
 		ballPanel = new BallPanel();
 		blockPanel = new BlockPanel();
 		ballPanel.setBounds(new Rectangle(Config.DIMENSIONS));
 		blockPanel.setBounds(new Rectangle(Config.DIMENSIONS));
 		p.add(ballPanel);
 		p.add(blockPanel);
-		
+
 		frame.pack();
 		frame.setVisible(true);
 

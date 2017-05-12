@@ -1,9 +1,10 @@
 package breakout;
 
 public class BreakoutGame implements Runnable {
+
 	private BreakoutCallbacks callback;
 	private long lastTick = System.currentTimeMillis();
-	public static int[][] blocks = new int[Config.BOARD_HEIGHT][Config.BOARD_WIDTH];
+	private static int[][] blocks;
 	private static Ball ball;
 
 	public BreakoutGame(BreakoutCallbacks bc) {
@@ -12,14 +13,11 @@ public class BreakoutGame implements Runnable {
 	}
 
 	public void run() {
-		/*
-		 * for (int i = BOARD_HEIGHT / 2; i < BOARD_HEIGHT; i++) { for (int j =
-		 * 0; j < BOARD_WIDTH; j++) { blocks[i][j] = i - BOARD_HEIGHT / 2 + 1; }
-		 * }
-		 */ // normal setup
-		// <CUSTOM TESTING SETUP>
-		for (int i = 0; i < Config.BOARD_WIDTH; i++) {
-			blocks[Config.BOARD_HEIGHT - 1][i] = 5;
+		getBlocks();
+		for(int r = 2; r < Config.MAX_BLOCK + 2; r++) {
+			for(int c = 0; c < Config.BOARD_WIDTH; c++) {
+				blocks[r][c] = Config.MAX_BLOCK - r + 2;
+			}
 		}
 		callback.ready();
 		while (true) { // edgy
@@ -31,32 +29,38 @@ public class BreakoutGame implements Runnable {
 			lastTick = System.currentTimeMillis();
 		}
 	}
-
+	public static int[][] getBlocks() {
+		if(blocks == null) {
+			blocks = new int[Config.BOARD_HEIGHT][Config.BOARD_WIDTH];
+		}
+		return blocks;
+	}
 	private void simulate() {
-		ball.goToNext();
 		int reflectOpt; // reflect option
 		reflectOpt = borderCheck();
 		if (reflectOpt == 0) {
 			reflectOpt = collisionCheck();
 		}
 		switch (reflectOpt) {
-		case 1:
-			ball.invertAndShiftX();
-			break;
-		case 2:
-			ball.invertAndShiftY();
-			break;
-		case 3:
-			ball.invertAndShiftBoth();
-			break;
-		default:
-			break;
+			case 1:
+				ball.invertAndShiftX();
+				break;
+			case 2:
+				ball.invertAndShiftY();
+				break;
+			case 3:
+				System.out.println("Should never be called");
+				ball.invertAndShiftBoth();
+				break;
+			default:
+				break;
 		}
+		ball.goToNext();
 	}
 
 	/**
 	 * Checks the borders for collisions
-	 * 
+	 *
 	 * @return 0 for nothing, 1 for x-invert, 2 for y-invert, 3 for all-invert
 	 */
 	private int borderCheck() {
@@ -81,7 +85,7 @@ public class BreakoutGame implements Runnable {
 
 	/**
 	 * Checks the borders for collisions
-	 * 
+	 *
 	 * @return 0 for nothing, 1 for x-invert, 2 for y-invert, 3 for all-invert
 	 */
 	private int collisionCheck() {
@@ -97,10 +101,12 @@ public class BreakoutGame implements Runnable {
 			if (block == 0) {
 				continue;
 			}
-			blocks[row][col]--;
+			if(!ball.recentlyHit) {
+				blocks[row][col]--;
+			}
 			Vector blockPos = new Vector(col + 0.5, row + 0.5);
-			double xDist = Math.abs(blockPos.x - v.x);
-			double yDist = Math.abs(blockPos.y - v.y);
+			double xDist = Math.abs(blockPos.x - ball.position.x);
+			double yDist = Math.abs(blockPos.y - ball.position.y);
 			if (xDist > yDist) {
 				return 1;
 			} else if (yDist > xDist) {
