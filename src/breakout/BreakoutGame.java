@@ -3,9 +3,8 @@ package breakout;
 public class BreakoutGame implements Runnable {
 	private BreakoutCallbacks callback;
 	private long lastTick = System.currentTimeMillis();
-	private int[][] blocks;
-	public static final double DELTA_TICK = Config.PHYSICS_TICK / 1000.0; // 25 ticks per second
-	private Ball ball;
+	private static int[][] blocks;
+	private static Ball ball;
 
 	public BreakoutGame(BreakoutCallbacks bc) {
 		callback = bc;
@@ -14,22 +13,23 @@ public class BreakoutGame implements Runnable {
 	}
 
 	public void run() {
-		/*for (int i = BOARD_HEIGHT / 2; i < BOARD_HEIGHT; i++) {
-			for (int j = 0; j < BOARD_WIDTH; j++) {
-				blocks[i][j] = i - BOARD_HEIGHT / 2 + 1;
-			}
-		}*/ //normal setup
-		//<CUSTOM TESTING SETUP>
-		for(int i = 0; i < Config.BOARD_WIDTH; i++) {
+		/*
+		 * for (int i = BOARD_HEIGHT / 2; i < BOARD_HEIGHT; i++) { for (int j =
+		 * 0; j < BOARD_WIDTH; j++) { blocks[i][j] = i - BOARD_HEIGHT / 2 + 1; }
+		 * }
+		 */ // normal setup
+		// <CUSTOM TESTING SETUP>
+		for (int i = 0; i < Config.BOARD_WIDTH; i++) {
 			blocks[Config.BOARD_HEIGHT - 1][i] = 5;
 		}
+		System.out.println(blocks);
 		callback.ready();
 		while (true) { // edgy
-			if (System.currentTimeMillis() < lastTick + DELTA_TICK) {
+			if (System.currentTimeMillis() < lastTick + Config.PHYSICS_DELTA) {
 				continue; // not time for an update
 			}
 			simulate();
-			callback.onUpdate(blocks, ball); // placeholder
+			callback.onUpdate(blocks, new Vector(ball.position), new Vector(ball.velocity)); // placeholder
 			lastTick = System.currentTimeMillis();
 		}
 	}
@@ -37,8 +37,10 @@ public class BreakoutGame implements Runnable {
 	private void simulate() {
 		ball.goToNext();
 		int reflectOpt; // reflect option
-		// TODO: REFLECT CORNERS + BOTTOM
-		reflectOpt = collisionCheck();
+		reflectOpt = borderCheck();
+		if (reflectOpt == 0) {
+			reflectOpt = collisionCheck();
+		}
 		switch (reflectOpt) {
 		case 1:
 			ball.invertAndShiftX();
@@ -54,10 +56,37 @@ public class BreakoutGame implements Runnable {
 		}
 	}
 
+	/**
+	 * Checks the borders for collisions
+	 * 
+	 * @return 0 for nothing, 1 for x-invert, 2 for y-invert, 3 for all-invert
+	 */
+	private int borderCheck() {
+		Vector[] bounds = ball.getBounds();
+		int row;
+		int col;
+		for (Vector v : bounds) {
+			row = Config.BOARD_HEIGHT - (int) (v.y);
+			col = (int) (v.x);
+			boolean outOfRow = !(0 <= row && row < Config.BOARD_HEIGHT);
+			boolean outOfCol = !(0 <= col && col < Config.BOARD_WIDTH);
+			if (outOfRow && outOfCol) {
+				return 3;
+			} else if (outOfRow) {
+				return 2;
+			} else if (outOfCol) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * Checks the borders for collisions
+	 * 
+	 * @return 0 for nothing, 1 for x-invert, 2 for y-invert, 3 for all-invert
+	 */
 	private int collisionCheck() {
-		// Checks to see if ball intersects with the x or y comp of a table
-		// cell, inverts if true
-		// 0 = nothing, 1 = x-invert, 2= y-invert, 3= all-invert
 		Vector[] bounds = ball.getBounds();
 		int row;
 		int col;
@@ -83,23 +112,5 @@ public class BreakoutGame implements Runnable {
 			}
 		}
 		return 0;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		for(int[] row : blocks) {
-			sb.append('|');
-			for(int n : row) {
-				if(n != 0) {
-					sb.append("["+n+"]");
-				}
-				else {
-					sb.append("   ");
-				}
-			}
-			sb.append("|\n");
-		}
-		return sb.toString();
 	}
 }
