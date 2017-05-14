@@ -24,18 +24,16 @@ public class BallPanel extends JPanel {
 	//INVERT ALL THE Y-VARIABLES (Y U SO STUPID SWING)
 	public void updateInfo(Vector p, Vector v) {
 		position = p;
-		position.y = Config.BOARD_HEIGHT - position.y;
 		velocity = v;
-		velocity.y *= -1;
 		guessTicks = 0;
 	}
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		guessTicks++;
-		g.setColor(Color.red);
-		int x = (int) ((position.x - Config.BALL_RADIUS) * Config.JPC + velocity.x * guessTicks * Config.RENDER_DELTA);
-		int y = (int) ((position.y - Config.BALL_RADIUS) * Config.JPC + velocity.y * guessTicks * Config.RENDER_DELTA);
+		g.setColor(Color.WHITE);
+		int x = (int) (position.x  * Config.JPC + velocity.x * guessTicks * Config.RENDER_DELTA);
+		int y = (int) (position.y * Config.JPC + velocity.y * guessTicks * Config.RENDER_DELTA);
 		int di = (int) (2*Config.BALL_RADIUS * Config.JPC);
 		g.fillOval(x, y, di, di);
 	}

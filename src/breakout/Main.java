@@ -31,7 +31,7 @@ public class Main {
 		Container p = frame.getContentPane();
 		p.setPreferredSize(Config.DIMENSIONS);
 		p.setLayout(null);
-		p.setBackground(Color.WHITE);
+		p.setBackground(Color.BLACK);
 
 		ballPanel = new BallPanel();
 		blockPanel = new BlockPanel();

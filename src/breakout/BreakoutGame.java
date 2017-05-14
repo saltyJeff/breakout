@@ -19,6 +19,7 @@ public class BreakoutGame implements Runnable {
 				blocks[r][c] = Config.MAX_BLOCK - r + 2;
 			}
 		}
+		//blocks[2][11] = 10;
 		callback.ready();
 		while (true) { // edgy
 			if (System.currentTimeMillis() < lastTick + Config.PHYSICS_TICK) {
@@ -36,19 +37,19 @@ public class BreakoutGame implements Runnable {
 		return blocks;
 	}
 	private void simulate() {
-		int reflectOpt; // reflect option
+		Collision reflectOpt; // reflect option
 		reflectOpt = borderCheck();
-		if (reflectOpt == 0) {
+		if (reflectOpt == Collision.CLEAR) {
 			reflectOpt = collisionCheck();
 		}
 		switch (reflectOpt) {
-			case 1:
+			case X:
 				ball.invertAndShiftX();
 				break;
-			case 2:
+			case Y:
 				ball.invertAndShiftY();
 				break;
-			case 3:
+			case BOTH:
 				System.out.println("Should never be called");
 				ball.invertAndShiftBoth();
 				break;
@@ -58,63 +59,60 @@ public class BreakoutGame implements Runnable {
 		ball.goToNext();
 	}
 
-	/**
-	 * Checks the borders for collisions
-	 *
-	 * @return 0 for nothing, 1 for x-invert, 2 for y-invert, 3 for all-invert
-	 */
-	private int borderCheck() {
+	private Collision borderCheck() {
 		Vector[] bounds = ball.getBounds();
 		int row;
 		int col;
 		for (Vector v : bounds) {
-			row = Config.BOARD_HEIGHT - 1 - (int) (v.y);
+			row = (int) (v.y);
 			col = (int) (v.x);
 			boolean outOfRow = v.y < 0 || !(0 <= row && row < Config.BOARD_HEIGHT); //floor negative number = rounding up??
 			boolean outOfCol = v.x < 0 || !(0 <= col && col < Config.BOARD_WIDTH);
 			if (outOfRow && outOfCol) {
-				return 3;
+				return Collision.BOTH;
 			} else if (outOfRow) {
-				return 2;
+				return Collision.Y;
 			} else if (outOfCol) {
-				return 1;
+				return Collision.X;
 			}
 		}
-		return 0;
+		return Collision.CLEAR;
 	}
-
-	/**
-	 * Checks the borders for collisions
-	 *
-	 * @return 0 for nothing, 1 for x-invert, 2 for y-invert, 3 for all-invert
-	 */
-	private int collisionCheck() {
+	private Collision collisionCheck() {
 		Vector[] bounds = ball.getBounds();
 		int row;
 		int col;
-		int block;
-		for (Vector v : bounds) {
-			row = Config.BOARD_HEIGHT - 1 - (int) (v.y);
-			col = (int) (v.x);
-			block = blocks[row][col];
-
-			if (block == 0) {
+		for(Vector v : bounds) {
+			row = (int)v.y;
+			col = (int)v.x;
+			int block = blocks[row][col];
+			if(block == 0) {
 				continue;
 			}
-			if(!ball.recentlyHit) {
-				blocks[row][col]--;
-			}
-			Vector blockPos = new Vector(col + 0.5, row + 0.5);
-			double xDist = Math.abs(blockPos.x - ball.position.x);
-			double yDist = Math.abs(blockPos.y - ball.position.y);
-			if (xDist > yDist) {
-				return 1;
-			} else if (yDist > xDist) {
-				return 2;
-			} else {
-				return 3;
-			}
+			blocks[row][col]--;
+			Collision colType = getCollisionType(new Vector(col, row), ball.position);
+			System.out.println("Col type: "+colType+" @ "+v);
+			return colType;
 		}
-		return 0;
+		return Collision.CLEAR;
+	}
+	private Collision getCollisionType(Vector boxCorner, Vector check) {
+		//diagonals in the form y-y1 = m(x-x1) -> y = m(x-x1)+y1
+		Vector lowerBoxCorner = new Vector(boxCorner.x, boxCorner.y+1);
+		boolean aboveLeftDiag = check.y < 1 * (check.x - boxCorner.x) + boxCorner.y;
+		boolean aboveRightDiag = check.y < -1 * (check.x - lowerBoxCorner.x) + lowerBoxCorner.y;
+		if(aboveLeftDiag && aboveRightDiag) {
+			return Collision.Y;
+		}
+		else if(!aboveLeftDiag && !aboveRightDiag) {
+			return Collision.Y;
+		}
+		else {
+			return Collision.X;
+		}
+	}
+	enum Collision {
+		CLEAR, X, Y, BOTH
 	}
 }
+
