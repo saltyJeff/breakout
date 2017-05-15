@@ -35,7 +35,8 @@ public class Main {
 
 		ballPanel = new BallPanel();
 		blockPanel = new BlockPanel();
-		ballPanel.setBounds(new Rectangle(Config.DIMENSIONS));
+                Rectangle bpdims = new Rectangle(0,0,Config.DIMENSIONS.width,Config.DIMENSIONS.height + (int)(0.25*Config.JPC) );
+		ballPanel.setBounds(bpdims);
 		blockPanel.setBounds(new Rectangle(Config.DIMENSIONS));
 		p.add(ballPanel);
 		p.add(blockPanel);
@@ -64,4 +65,15 @@ public class Main {
 			blockPanel.repaint();
 		}
 	};
+        
+         public static void panelMover(){
+            class ArrowListener implements ActionListener{
+                public void actionPerformed(ActionEvent e) {
+                     if(ballPanel.addKeyListener(new KeyListener(){
+                         @override
+                     }));
+                }
+)
+            }
+        }
 }
