@@ -1,21 +1,25 @@
 package breakout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BreakoutGame implements Runnable {
 
 	private BreakoutCallbacks callback;
 	private long lastTick = System.currentTimeMillis();
 	private static int[][] blocks;
 	private static Ball ball;
-
+	private Collision[] collides;//will be used later :P
 	public BreakoutGame(BreakoutCallbacks bc) {
 		callback = bc;
 		ball = new Ball();
+		collides = new Collision[4];
 	}
 
 	public void run() {
 		getBlocks();
 		for(int r = 2; r < Config.MAX_BLOCK + 2; r++) {
-			for(int c = 1; c < Config.BOARD_WIDTH - 1; c++) {
+			for(int c = 0; c < Config.BOARD_WIDTH; c++) {
 				blocks[r][c] = Config.MAX_BLOCK - r + 2;
 			}
 		}
@@ -38,12 +42,33 @@ public class BreakoutGame implements Runnable {
 		return blocks;
 	}
 	private void simulate() {
-		Collision reflectOpt; // reflect option
-		reflectOpt = borderCheck();
-		if (reflectOpt == Collision.CLEAR) {
-			reflectOpt = collisionCheck();
+		//collides stores the collisions
+		borderCheck();
+		if(collides.contains(Collision.BOTH)) {
+			handleCollision(Collision.BOTH);
 		}
-		switch (reflectOpt) {
+		else if(collides.contains(Collision.X)) {
+			collisionCheck();
+			if(collides.contains(Collision.Y)) {
+				handleCollision(Collision.BOTH);
+			}
+			else {
+				handleCollision(Collision.X);
+			}
+		}
+		else if(collides.contains(Collision.Y)) {
+			collisionCheck();
+			if(collides.contains(Collision.X)) {
+				handleCollision(Collision.BOTH);
+			}
+			else {
+				handleCollision(Collision.Y);
+			}
+		}
+		ball.goToNext();
+	}
+	private void handleCollision(Collision type) {
+		switch (type) {
 			case X:
 				ball.invertAndShiftX();
 				ball.goToNext();
@@ -61,33 +86,32 @@ public class BreakoutGame implements Runnable {
 			default:
 				break;
 		}
-		ball.goToNext();
 	}
-
-	private Collision borderCheck() {
+	private void borderCheck() {
 		Vector[] bounds = ball.getBounds();
 		int row;
 		int col;
-		for (Vector v : bounds) {
+		for (int i = 0; i < bounds.length; i++) {
+			Vector v = bounds[i];
 			row = (int) (v.y);
 			col = (int) (v.x);
 			boolean outOfRow = v.y < 0 || !(0 <= row && row < Config.BOARD_HEIGHT); //floor negative number = rounding up??
 			boolean outOfCol = v.x < 0 || !(0 <= col && col < Config.BOARD_WIDTH);
 			if (outOfRow && outOfCol) {
-				return Collision.BOTH;
+				collides[i] = Collision.BOTH;
 			} else if (outOfRow) {
-				return Collision.Y;
+				collides[i] = Collision.Y;
 			} else if (outOfCol) {
-				return Collision.X;
+				collides[i] = Collision.X;
 			}
 		}
-		return Collision.CLEAR;
 	}
-	private Collision collisionCheck() {
+	private void collisionCheck() {
 		Vector[] bounds = ball.getBounds();
 		int row;
 		int col;
-		for(Vector v : bounds) {
+		for(int i = 0; i < bounds.length; i++) {
+			Vector v = bounds[i];
 			row = (int)v.y;
 			col = (int)v.x;
 			int block = blocks[row][col];
@@ -96,11 +120,8 @@ public class BreakoutGame implements Runnable {
 			}
 			blocks[row][col]--;
 			Collision colType = getCollisionType(new Vector(col, row), ball.position);
-			System.out.println("Col type: "+colType+" @ "+v);
-			//ball.velocity = ball.velocity.add(Config.FASTER_VEC);
-			return colType;
+			collides[i] = colType;
 		}
-		return Collision.CLEAR;
 	}
 	private Collision getCollisionType(Vector boxCorner, Vector check) {
 		//diagonals in the form y-y1 = m(x-x1) -> y = m(x-x1)+y1
