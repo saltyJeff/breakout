@@ -44,21 +44,21 @@ public class BreakoutGame implements Runnable {
 	private void simulate() {
 		//collides stores the collisions
 		borderCheck();
-		if(collides.contains(Collision.BOTH)) {
+		if(inArray(Collision.BOTH)) {
 			handleCollision(Collision.BOTH);
 		}
-		else if(collides.contains(Collision.X)) {
+		else if(inArray(Collision.X)) {
 			collisionCheck();
-			if(collides.contains(Collision.Y)) {
+			if(inArray(Collision.Y)) {
 				handleCollision(Collision.BOTH);
 			}
 			else {
 				handleCollision(Collision.X);
 			}
 		}
-		else if(collides.contains(Collision.Y)) {
+		else if(inArray(Collision.Y)) {
 			collisionCheck();
-			if(collides.contains(Collision.X)) {
+			if(inArray(Collision.X)) {
 				handleCollision(Collision.BOTH);
 			}
 			else {
@@ -66,6 +66,14 @@ public class BreakoutGame implements Runnable {
 			}
 		}
 		ball.goToNext();
+	}
+	private boolean inArray(Collision c) {
+		for(Collision col : collides) {
+			if(c == col) {
+				return true;
+			}
+		}
+		return false;
 	}
 	private void handleCollision(Collision type) {
 		switch (type) {
