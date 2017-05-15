@@ -11,9 +11,9 @@ public class Ball {
 	public Vector[] getBounds() {
 		Vector[] arr = new Vector[4];
 		arr[0] = new Vector(position);
-		arr[1] = position.add(Vector.RIGHT.multiply(Config.BALL_RADIUS));
-		arr[2] = position.add(Vector.DOWN.multiply(Config.BALL_RADIUS));
-		arr[3] = position.add(new Vector(1,1).multiply(Config.BALL_RADIUS));
+		arr[1] = position.add(Vector.RIGHT.multiply(2*Config.BALL_RADIUS));
+		arr[2] = position.add(Vector.DOWN.multiply(2*Config.BALL_RADIUS));
+		arr[3] = position.add(new Vector(1,1).multiply(2*Config.BALL_RADIUS));
 		return arr;
 	}
 
@@ -35,8 +35,5 @@ public class Ball {
 	public void invertAndShiftY() {
 		velocity.y = velocity.y * -1.0;
 		//position = position.add(Vector.UP.multiply(velocity.y * (Config.BALL_RADIUS)));
-	}
-	public void invertAndShiftBoth() {
-		velocity = velocity.multiply(-1);
 	}
 }

@@ -15,7 +15,7 @@ public class BreakoutGame implements Runnable {
 	public void run() {
 		getBlocks();
 		for(int r = 2; r < Config.MAX_BLOCK + 2; r++) {
-			for(int c = 0; c < Config.BOARD_WIDTH; c++) {
+			for(int c = 1; c < Config.BOARD_WIDTH - 1; c++) {
 				blocks[r][c] = Config.MAX_BLOCK - r + 2;
 			}
 		}
@@ -26,6 +26,7 @@ public class BreakoutGame implements Runnable {
 				continue; // not time for an update
 			}
 			simulate();
+			//System.out.println(String.format("Delta time: %.05f", (System.currentTimeMillis() - lastTick)/1000.0));
 			callback.onUpdate(blocks, new Vector(ball.position), new Vector(ball.velocity)); // placeholder
 			lastTick = System.currentTimeMillis();
 		}
@@ -45,13 +46,17 @@ public class BreakoutGame implements Runnable {
 		switch (reflectOpt) {
 			case X:
 				ball.invertAndShiftX();
+				ball.goToNext();
 				break;
 			case Y:
 				ball.invertAndShiftY();
+				ball.goToNext();
 				break;
 			case BOTH:
 				System.out.println("Should never be called");
-				ball.invertAndShiftBoth();
+				ball.invertAndShiftX();
+				ball.invertAndShiftY();
+				ball.goToNext();
 				break;
 			default:
 				break;
@@ -92,6 +97,7 @@ public class BreakoutGame implements Runnable {
 			blocks[row][col]--;
 			Collision colType = getCollisionType(new Vector(col, row), ball.position);
 			System.out.println("Col type: "+colType+" @ "+v);
+			//ball.velocity = ball.velocity.add(Config.FASTER_VEC);
 			return colType;
 		}
 		return Collision.CLEAR;
@@ -101,14 +107,22 @@ public class BreakoutGame implements Runnable {
 		Vector lowerBoxCorner = new Vector(boxCorner.x, boxCorner.y+1);
 		boolean aboveLeftDiag = check.y < 1 * (check.x - boxCorner.x) + boxCorner.y;
 		boolean aboveRightDiag = check.y < -1 * (check.x - lowerBoxCorner.x) + lowerBoxCorner.y;
+		boolean belowLeftDiag = check.y > 1 * (check.x - boxCorner.x) + boxCorner.y;
+		boolean belowRightDiag = check.y > -1 * (check.x - lowerBoxCorner.x) + lowerBoxCorner.y;
 		if(aboveLeftDiag && aboveRightDiag) {
 			return Collision.Y;
 		}
-		else if(!aboveLeftDiag && !aboveRightDiag) {
+		else if(belowLeftDiag && belowRightDiag) {
 			return Collision.Y;
 		}
-		else {
+		else if(belowLeftDiag && aboveRightDiag){
 			return Collision.X;
+		}
+		else if(aboveLeftDiag && belowRightDiag){
+			return Collision.X;
+		}
+		else {
+			return Collision.BOTH;
 		}
 	}
 	enum Collision {

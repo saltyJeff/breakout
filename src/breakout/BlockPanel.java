@@ -10,21 +10,14 @@ import javax.swing.*;
 public class BlockPanel extends JPanel {
 
 	private static final long serialVersionUID = -1379508343106406529L;
-	private double period = Math.PI * 2 / Config.MAX_BLOCK;
-	private double step = Math.PI * 2 / 3;
 	private Color[] colors = new Color[Config.MAX_BLOCK];
 	public BlockPanel() {
 		super();
 		setOpaque(false);
+		float step = (float)(1.0f/Config.MAX_BLOCK);
 		for(int i = 0; i < Config.MAX_BLOCK; i++) {
-			colors[i] = rainbowify(i+1);
+			colors[i] = Color.getHSBColor(i*step, 0.9f, 0.9f);
 		}
-	}
-	private Color rainbowify (int blockVal) {
-		int r = (int)Math.round(127 * Math.cos(period * (blockVal))) + 128;
-		int g = (int)Math.round(127 * Math.cos(period * (blockVal - step))) + 128;
-		int b = (int)Math.round(127 * Math.cos(period * (blockVal - 2*step))) + 128;
-		return new Color(r,g,b);
 	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
