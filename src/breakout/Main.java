@@ -51,9 +51,11 @@ public class Main {
 		timer.start();
 		
 		//add the handler
-		frame.addKeyListener(new KeyListener() {
+		frame.addKeyListener(new KeyListener() {//39 right, 37 left
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
+				if(e.getKeyCode() == 39) {
+					ballPanel.setDir(0);
+				}
 			}
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub

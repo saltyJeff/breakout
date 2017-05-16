@@ -15,11 +15,14 @@ public class BallPanel extends JPanel {
 	private int guessTicks;
 	private Vector position = Vector.ZERO;
 	private Vector velocity = Vector.ZERO;
+	private int dir = 0;
 	public BallPanel() {
 		super();
 		setOpaque(false);
 	}
-
+	public void setDir(int newDir) {
+		dir = newDir;
+	}
 	private static final long serialVersionUID = 1591952185726646237L;
 	//INVERT ALL THE Y-VARIABLES (Y U SO STUPID SWING)
 	public void updateInfo(Vector p, Vector v) {
