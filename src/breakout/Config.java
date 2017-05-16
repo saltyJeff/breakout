@@ -11,8 +11,8 @@ public final class Config { //cuz static classes aren't a thing :P
 	public static final int RENDER_TICK = 1000/50;
 	public static final int JPC = 60;
 	public static final int MAX_BLOCK = 3;
-	public static final Vector INITIAL_POS = new Vector(0, 0.5);
-	public static final Vector INITIAL_VEL = new Vector(-1,-1).multiply(3);
+	public static final Vector INITIAL_POS = new Vector(1,1);
+	public static final Vector INITIAL_VEL = new Vector(1,1).multiply(3);
 	public static final double SPEED_FACTOR = 0.02;
         public static final double PADDLE_HEIGHT = 0.25;
         public static final int PADDLE_WIDTH = 3;

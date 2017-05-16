@@ -44,12 +44,12 @@ public class BreakoutGame implements Runnable {
 	private void simulate() {
 		//collides stores the collisions
 		borderCheck();
-		if(inArray(Collision.BOTH)) {
+		if(inArray(Collision.BOTH) || (inArray(Collision.X) && inArray(Collision.Y))) {
 			handleCollision(Collision.BOTH);
 		}
 		else if(inArray(Collision.X)) {
 			collisionCheck();
-			if(inArray(Collision.Y)) {
+			if(inArray(Collision.Y) || inArray(Collision.BOTH)) {
 				handleCollision(Collision.BOTH);
 			}
 			else {
@@ -58,10 +58,22 @@ public class BreakoutGame implements Runnable {
 		}
 		else if(inArray(Collision.Y)) {
 			collisionCheck();
-			if(inArray(Collision.X)) {
+			if(inArray(Collision.X) || inArray(Collision.BOTH)) {
 				handleCollision(Collision.BOTH);
 			}
 			else {
+				handleCollision(Collision.Y);
+			}
+		}
+		else {
+			collisionCheck();
+			if(inArray(Collision.BOTH) || (inArray(Collision.X) && inArray(Collision.Y))) {
+				handleCollision(Collision.BOTH);
+			}
+			else if(inArray(Collision.X)) {
+				handleCollision(Collision.X);
+			}
+			else if(inArray(Collision.Y)) {
 				handleCollision(Collision.Y);
 			}
 		}
@@ -112,6 +124,9 @@ public class BreakoutGame implements Runnable {
 			} else if (outOfCol) {
 				collides[i] = Collision.X;
 			}
+			else {
+				collides[i] = null;
+			}
 		}
 	}
 	private void collisionCheck() {
@@ -122,8 +137,13 @@ public class BreakoutGame implements Runnable {
 			Vector v = bounds[i];
 			row = (int)v.y;
 			col = (int)v.x;
+			if(row < 0 || row >= Config.BOARD_HEIGHT || col < 0 || col >= Config.BOARD_WIDTH) {
+				collides[i] = null;
+				return;
+			}
 			int block = blocks[row][col];
 			if(block == 0) {
+				collides[i] = null;
 				continue;
 			}
 			blocks[row][col]--;

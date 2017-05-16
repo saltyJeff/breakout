@@ -49,6 +49,17 @@ public class Main {
 		thread = new Thread(bg);
 		thread.start();
 		timer.start();
+		
+		//add the handler
+		frame.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+			public void keyTyped(KeyEvent e) {}
+	    });
 	}
 
 	private static void graphicUpdate() {
@@ -65,15 +76,5 @@ public class Main {
 			blockPanel.repaint();
 		}
 	};
-        
-         public static void panelMover(){
-            class ArrowListener implements ActionListener{
-                public void actionPerformed(ActionEvent e) {
-                     if(ballPanel.addKeyListener(new KeyListener(){
-                         @override
-                     }));
-                }
-)
-            }
-        }
 }
+
