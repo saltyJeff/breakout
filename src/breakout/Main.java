@@ -54,11 +54,16 @@ public class Main {
 		frame.addKeyListener(new KeyListener() {//39 right, 37 left
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == 39) {
-					ballPanel.setDir(0);
+					ballPanel.setDir(1);
+				}
+				else if(e.getKeyCode() == 37) {
+					ballPanel.setDir(-1);
 				}
 			}
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
+				if(e.getKeyCode() == 39 || e.getKeyCode() == 37) {
+					ballPanel.setDir(0);
+				}
 			}
 			public void keyTyped(KeyEvent e) {}
 	    });
