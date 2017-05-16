@@ -6,13 +6,13 @@ public final class Config { //cuz static classes aren't a thing :P
 	private Config () {};
 	public static final int BOARD_WIDTH = 14;
 	public static final int BOARD_HEIGHT = 12;
-	public static final double BALL_RADIUS = 0.07;
-	public static final int PHYSICS_TICK = 1000/50;
+	public static final double BALL_RADIUS = 0.1;
+	public static final int PHYSICS_TICK = 1000/70;
 	public static final int RENDER_TICK = 1000/50;
 	public static final int JPC = 60;
-	public static final int MAX_BLOCK = 5;
+	public static final int MAX_BLOCK = 4;
 	public static final Vector INITIAL_POS = new Vector(1,1);
-	public static final Vector INITIAL_VEL = new Vector(1,1).multiply(6.4);
+	public static final Vector INITIAL_VEL = new Vector(1,1).multiply(6);
 	public static final double SPEED_FACTOR = 0.02;
     public static final double PADDLE_HEIGHT = 0.25;
     public static final int PADDLE_WIDTH = 3;

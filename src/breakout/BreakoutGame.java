@@ -9,11 +9,9 @@ public class BreakoutGame implements Runnable {
 	private long lastTick = System.currentTimeMillis();
 	private static int[][] blocks;
 	private static Ball ball;
-	private Collision[] collides;//will be used later :P
 	public BreakoutGame(BreakoutCallbacks bc) {
 		callback = bc;
 		ball = new Ball();
-		collides = new Collision[4];
 	}
 
 	public void run() {
@@ -43,22 +41,27 @@ public class BreakoutGame implements Runnable {
 	}
 	private void simulate() {
 		//collides stores the collisions
-		borderCheck();
-		if(inArray(Collision.BOTH) || (inArray(Collision.X) && inArray(Collision.Y))) {
+		Collision[] collides = borderCheck();
+		if(inArray(collides, Collision.BOTH) || (inArray(collides, Collision.X) && inArray(collides, Collision.Y))) {
+			//System.out.println("Border has either both or a x and a y");
 			handleCollision(Collision.BOTH);
 		}
-		else if(inArray(Collision.X)) {
-			collisionCheck();
-			if(inArray(Collision.Y) || inArray(Collision.BOTH)) {
+		else if(inArray(collides, Collision.X)) {
+			//System.out.println("Border fosho has a x");
+			Collision[] col2s = collisionCheck();
+			if(inArray(col2s, Collision.Y) || inArray(col2s, Collision.BOTH)) {
+				//System.out.println("Mix n Match");
 				handleCollision(Collision.BOTH);
 			}
 			else {
 				handleCollision(Collision.X);
 			}
 		}
-		else if(inArray(Collision.Y)) {
-			collisionCheck();
-			if(inArray(Collision.X) || inArray(Collision.BOTH)) {
+		else if(inArray(collides, Collision.Y)) {
+			//System.out.println("Border fosho has a y");
+			Collision[] col2s = collisionCheck();
+			if(inArray(col2s, Collision.X) || inArray(col2s, Collision.BOTH)) {
+				//System.out.println("Mix n Match");
 				handleCollision(Collision.BOTH);
 			}
 			else {
@@ -66,21 +69,36 @@ public class BreakoutGame implements Runnable {
 			}
 		}
 		else {
-			collisionCheck();
-			if(inArray(Collision.BOTH) || (inArray(Collision.X) && inArray(Collision.Y))) {
+			Collision[] col2s = collisionCheck();
+			if(inArray(col2s, Collision.BOTH) || (inArray(col2s, Collision.X) && inArray(col2s, Collision.Y))) {
+				System.out.println("Double collision or has both an x and y");
+				System.out.println(printCollisions(col2s));
 				handleCollision(Collision.BOTH);
 			}
-			else if(inArray(Collision.X)) {
+			else if(inArray(col2s, Collision.X)) {
 				handleCollision(Collision.X);
 			}
-			else if(inArray(Collision.Y)) {
+			else if(inArray(col2s, Collision.Y)) {			
 				handleCollision(Collision.Y);
 			}
 		}
 		ball.goToNext();
 	}
-	private boolean inArray(Collision c) {
-		for(Collision col : collides) {
+	private String printCollisions(Collision [] cols) {
+		StringBuilder sb = new StringBuilder();
+		for(Collision c : cols) {
+			if(c != null) {
+				sb.append(c.name());
+			}
+			else {
+				sb.append('?');
+			}
+			sb.append('\n');
+		}
+		return sb.toString();
+	}
+	private boolean inArray(Collision[] cols, Collision c) {
+		for(Collision col : cols) {
 			if(c == col) {
 				return true;
 			}
@@ -91,45 +109,46 @@ public class BreakoutGame implements Runnable {
 		switch (type) {
 			case X:
 				ball.invertAndShiftX();
-				//ball.goToNext();
+				ball.goToNext();
 				break;
 			case Y:
 				ball.invertAndShiftY();
-				//ball.goToNext();
+				ball.goToNext();
 				break;
 			case BOTH:
 				ball.invertAndShiftX();
 				ball.invertAndShiftY();
-				//ball.goToNext();
+				ball.goToNext();
 				break;
 			default:
 				break;
 		}
 	}
-	private void borderCheck() {
+	private Collision[] borderCheck() {
 		Vector[] bounds = ball.getBounds();
-		int row;
-		int col;
+		Collision[] r = new Collision[bounds.length];
 		for (int i = 0; i < bounds.length; i++) {
 			Vector v = bounds[i];
-			row = (int) (v.y);
-			col = (int) (v.x);
-			boolean outOfRow = v.y < 0 || !(0 <= row && row < Config.BOARD_HEIGHT); //floor negative number = rounding up??
-			boolean outOfCol = v.x < 0 || !(0 <= col && col < Config.BOARD_WIDTH);
+			boolean outOfRow = v.y < 0 || !(0 <= v.y && v.y < Config.BOARD_HEIGHT); //floor negative number = rounding up??
+			boolean outOfCol = v.x < 0 || !(0 <= v.x && v.x < Config.BOARD_WIDTH);
 			if (outOfRow && outOfCol) {
-				collides[i] = Collision.BOTH;
-			} else if (outOfRow) {
-				collides[i] = Collision.Y;
-			} else if (outOfCol) {
-				collides[i] = Collision.X;
+				r[i] = Collision.BOTH;
+			}
+			else if (outOfCol) {
+				r[i] = Collision.X;
+			}
+			else if (outOfRow) {
+				r[i] = Collision.Y;
 			}
 			else {
-				collides[i] = null;
+				r[i] = null;
 			}
 		}
+		return r;
 	}
-	private void collisionCheck() {
+	private Collision[] collisionCheck() {
 		Vector[] bounds = ball.getBounds();
+		Collision[] r = new Collision[bounds.length];
 		int row;
 		int col;
 		boolean hasTicked = false;
@@ -138,12 +157,12 @@ public class BreakoutGame implements Runnable {
 			row = (int)v.y;
 			col = (int)v.x;
 			if(row < 0 || row >= Config.BOARD_HEIGHT || col < 0 || col >= Config.BOARD_WIDTH) {
-				collides[i] = null;
-				return;
+				r[i] = null;
+				continue;
 			}
 			int block = blocks[row][col];
-			if(block == 0) {
-				collides[i] = null;
+			if(block <= 0) {
+				r[i] = null;
 				continue;
 			}
 			if(!hasTicked) {
@@ -151,8 +170,9 @@ public class BreakoutGame implements Runnable {
 				hasTicked = true;
 			}
 			Collision colType = getCollisionType(new Vector(col, row), ball.position);
-			collides[i] = colType;
+			r[i] = colType;
 		}
+		return r;
 	}
 	private Collision getCollisionType(Vector boxCorner, Vector check) {
 		//diagonals in the form y-y1 = m(x-x1) -> y = m(x-x1)+y1
@@ -174,7 +194,7 @@ public class BreakoutGame implements Runnable {
 			return Collision.X;
 		}
 		else {
-			return Collision.BOTH;
+			return null;
 		}
 	}
 	enum Collision {
