@@ -29,14 +29,14 @@ public class Main {
 		frame.setTitle("Breakout");
 		frame.setResizable(false);
 		Container p = frame.getContentPane();
-		p.setPreferredSize(Config.DIMENSIONS);
+		Dimension bpDims = new Dimension(Config.DIMENSIONS.width, Config.DIMENSIONS.height + (int)(Config.PADDLE_HEIGHT*Config.JPC) );
+		p.setPreferredSize(bpDims);
 		p.setLayout(null);
 		p.setBackground(Color.BLACK);
 
 		ballPanel = new BallPanel();
 		blockPanel = new BlockPanel();
-                Rectangle bpdims = new Rectangle(0,0,Config.DIMENSIONS.width,Config.DIMENSIONS.height + (int)(0.25*Config.JPC) );
-		ballPanel.setBounds(bpdims);
+		ballPanel.setBounds(new Rectangle(bpDims));
 		blockPanel.setBounds(new Rectangle(Config.DIMENSIONS));
 		p.add(ballPanel);
 		p.add(blockPanel);
@@ -54,15 +54,15 @@ public class Main {
 		frame.addKeyListener(new KeyListener() {//39 right, 37 left
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == 39) {
-					ballPanel.setDir(1);
+					bg.setDir(1);
 				}
 				else if(e.getKeyCode() == 37) {
-					ballPanel.setDir(-1);
+					bg.setDir(-1);
 				}
 			}
 			public void keyReleased(KeyEvent e) {
 				if(e.getKeyCode() == 39 || e.getKeyCode() == 37) {
-					ballPanel.setDir(0);
+					bg.setDir(0);
 				}
 			}
 			public void keyTyped(KeyEvent e) {}
@@ -78,8 +78,8 @@ public class Main {
 			// System.out.println("We have signs of life");
 		}
 
-		public void onUpdate(int[][] newBoard, Vector ballPos, Vector ballVel) {
-			ballPanel.updateInfo(ballPos, ballVel);
+		public void onUpdate(int[][] newBoard, Vector ballPos, Vector ballVel, double paddlePos) {
+			ballPanel.updateInfo(ballPos, ballVel, paddlePos);
 			blockPanel.repaint();
 		}
 	};

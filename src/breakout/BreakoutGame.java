@@ -9,11 +9,15 @@ public class BreakoutGame implements Runnable {
 	private long lastTick = System.currentTimeMillis();
 	private static int[][] blocks;
 	private static Ball ball;
+	private int dir = 0;
+	private double paddlePos = Config.BOARD_WIDTH / 2 - Config.PADDLE_WIDTH;
+	public void setDir(int newDir) {
+		dir = newDir;
+	}
 	public BreakoutGame(BreakoutCallbacks bc) {
 		callback = bc;
 		ball = new Ball();
 	}
-
 	public void run() {
 		getBlocks();
 		for(int r = 2; r < Config.MAX_BLOCK + 2; r++) {
@@ -29,7 +33,7 @@ public class BreakoutGame implements Runnable {
 			}
 			simulate();
 			//System.out.println(String.format("Delta time: %.05f", (System.currentTimeMillis() - lastTick)/1000.0));
-			callback.onUpdate(blocks, new Vector(ball.position), new Vector(ball.velocity)); // placeholder
+			callback.onUpdate(blocks, new Vector(ball.position), new Vector(ball.velocity), paddlePos);
 			lastTick = System.currentTimeMillis();
 		}
 	}
@@ -40,6 +44,13 @@ public class BreakoutGame implements Runnable {
 		return blocks;
 	}
 	private void simulate() {
+		paddlePos+= dir * Config.PHYSICS_DELTA * Config.PADDLE_SPEED;
+		if(paddlePos < 0){
+			paddlePos = 0;
+		}
+		else if(paddlePos > Config.BOARD_WIDTH- Config.PADDLE_WIDTH){
+			paddlePos = Config.BOARD_WIDTH- Config.PADDLE_WIDTH;
+		}
 		//collides stores the collisions
 		Collision[] collides = borderCheck();
 		if(inArray(collides, Collision.BOTH) || (inArray(collides, Collision.X) && inArray(collides, Collision.Y))) {
@@ -129,7 +140,8 @@ public class BreakoutGame implements Runnable {
 		Collision[] r = new Collision[bounds.length];
 		for (int i = 0; i < bounds.length; i++) {
 			Vector v = bounds[i];
-			boolean outOfRow = v.y < 0 || !(0 <= v.y && v.y < Config.BOARD_HEIGHT); //floor negative number = rounding up??
+			boolean inPaddleRange = v.y > Config.BOARD_HEIGHT && paddlePos <= v.x && v.x <= paddlePos+Config.PADDLE_WIDTH; 
+			boolean outOfRow = inPaddleRange || v.y < 0; //floor negative number = rounding up??
 			boolean outOfCol = v.x < 0 || !(0 <= v.x && v.x < Config.BOARD_WIDTH);
 			if (outOfRow && outOfCol) {
 				r[i] = Collision.BOTH;

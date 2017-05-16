@@ -15,21 +15,19 @@ public class BallPanel extends JPanel {
 	private int guessTicks;
 	private Vector position = Vector.ZERO;
 	private Vector velocity = Vector.ZERO;
-	private int dir = 0;
+	private double paddlePos = 0;
 	public BallPanel() {
 		super();
+		
 		setOpaque(false);
-	}
-	public void setDir(int newDir) {
-		dir = newDir;
-                
 	}
 	private static final long serialVersionUID = 1591952185726646237L;
 	//INVERT ALL THE Y-VARIABLES (Y U SO STUPID SWING)
-	public void updateInfo(Vector p, Vector v) {
+	public void updateInfo(Vector p, Vector v, double pp) {
 		position = p;
 		velocity = v;
 		guessTicks = 0;
+		paddlePos = pp;
 	}
 	@Override
 	public void paintComponent(Graphics g) {
@@ -40,6 +38,6 @@ public class BallPanel extends JPanel {
 		int y = (int) (position.y * Config.JPC + velocity.y * guessTicks * Config.RENDER_DELTA);
 		int di = (int) (2*Config.BALL_RADIUS * Config.JPC);
 		g.fillOval(x, y, di, di);
-                g.fillRect(Config.PADDLE_X, Config.BOARD_HEIGHT*Config.JPC - Config.JPC/2, (int)Config.PADDLE_WIDTH * Config.JPC, (int)Config.PADDLE_HEIGHT * Config.JPC);
+        g.fillRect((int)(paddlePos*Config.JPC), (int)((Config.BOARD_HEIGHT+Config.PADDLE_HEIGHT)*Config.JPC), (int)Config.PADDLE_WIDTH * Config.JPC, (int)Config.PADDLE_HEIGHT * Config.JPC);
 	}
 }
