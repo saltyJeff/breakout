@@ -91,17 +91,16 @@ public class BreakoutGame implements Runnable {
 		switch (type) {
 			case X:
 				ball.invertAndShiftX();
-				ball.goToNext();
+				//ball.goToNext();
 				break;
 			case Y:
 				ball.invertAndShiftY();
-				ball.goToNext();
+				//ball.goToNext();
 				break;
 			case BOTH:
-				System.out.println("Should never be called");
 				ball.invertAndShiftX();
 				ball.invertAndShiftY();
-				ball.goToNext();
+				//ball.goToNext();
 				break;
 			default:
 				break;
@@ -133,6 +132,7 @@ public class BreakoutGame implements Runnable {
 		Vector[] bounds = ball.getBounds();
 		int row;
 		int col;
+		boolean hasTicked = false;
 		for(int i = 0; i < bounds.length; i++) {
 			Vector v = bounds[i];
 			row = (int)v.y;
@@ -146,7 +146,10 @@ public class BreakoutGame implements Runnable {
 				collides[i] = null;
 				continue;
 			}
-			blocks[row][col]--;
+			if(!hasTicked) {
+				blocks[row][col]--;
+				hasTicked = true;
+			}
 			Collision colType = getCollisionType(new Vector(col, row), ball.position);
 			collides[i] = colType;
 		}
