@@ -22,4 +22,5 @@ public final class Config { //cuz static classes aren't a thing :P
 	public static final double RENDER_DELTA = RENDER_TICK * 0.001;
 	public static final Dimension DIMENSIONS = new Dimension(Config.BOARD_WIDTH*Config.JPC, Config.BOARD_HEIGHT*Config.JPC);
 	public static final Vector FASTER_VEC = new Vector(SPEED_FACTOR, SPEED_FACTOR);
+        public static int PADDLE_X = (Config.BOARD_WIDTH*Config.JPC)/2- ((Config.BOARD_WIDTH*Config.JPC)/10);
 }

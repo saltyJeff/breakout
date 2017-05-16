@@ -22,6 +22,7 @@ public class BallPanel extends JPanel {
 	}
 	public void setDir(int newDir) {
 		dir = newDir;
+                
 	}
 	private static final long serialVersionUID = 1591952185726646237L;
 	//INVERT ALL THE Y-VARIABLES (Y U SO STUPID SWING)
@@ -39,6 +40,6 @@ public class BallPanel extends JPanel {
 		int y = (int) (position.y * Config.JPC + velocity.y * guessTicks * Config.RENDER_DELTA);
 		int di = (int) (2*Config.BALL_RADIUS * Config.JPC);
 		g.fillOval(x, y, di, di);
-                g.fillRect((Config.BOARD_WIDTH*Config.JPC)/2- ((Config.BOARD_WIDTH*Config.JPC)/10), Config.BOARD_HEIGHT*Config.JPC - Config.JPC/2, (int)Config.PADDLE_WIDTH * Config.JPC, (int)Config.PADDLE_HEIGHT * Config.JPC);
+                g.fillRect(Config.PADDLE_X, Config.BOARD_HEIGHT*Config.JPC - Config.JPC/2, (int)Config.PADDLE_WIDTH * Config.JPC, (int)Config.PADDLE_HEIGHT * Config.JPC);
 	}
 }
