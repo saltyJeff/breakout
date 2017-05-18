@@ -12,6 +12,7 @@ public class BreakoutGame implements Runnable {
 	private int dir = 0;
 	private double paddlePos = Config.BOARD_WIDTH / 2 - Config.PADDLE_WIDTH;
 	private int status = 0; //0 = normal, -1 = loss, 1 = win
+	private int blocksLeft = 0;
 	public void setDir(int newDir) {
 		dir = newDir;
 	}
@@ -24,16 +25,15 @@ public class BreakoutGame implements Runnable {
 		for(int r = 2; r < Config.MAX_BLOCK + 2; r++) {
 			for(int c = 0; c < Config.BOARD_WIDTH; c++) {
 				blocks[r][c] = Config.MAX_BLOCK - r + 2;
+				blocksLeft += Config.MAX_BLOCK - r + 2;
 			}
 		}
-		//blocks[2][11] = 10;
 		callback.ready();
 		while (status == 0) { // edgy
 			if (System.currentTimeMillis() < lastTick + Config.PHYSICS_TICK) {
 				continue; // not time for an update
 			}
 			simulate();
-			//System.out.println(String.format("Delta time: %.05f", (System.currentTimeMillis() - lastTick)/1000.0));
 			callback.onUpdate(blocks, new Vector(ball.position), new Vector(ball.velocity), paddlePos);
 			lastTick = System.currentTimeMillis();
 		}
@@ -51,6 +51,10 @@ public class BreakoutGame implements Runnable {
 		return blocks;
 	}
 	private void simulate() {
+		if(blocksLeft <= 0) {
+			status = 1;
+			return;
+		}
 		paddlePos+= dir * Config.PHYSICS_DELTA * Config.PADDLE_SPEED;
 		if(paddlePos < 0){
 			paddlePos = 0;
@@ -154,19 +158,18 @@ public class BreakoutGame implements Runnable {
 		for (int i = 0; i < bounds.length; i++) {
 			Vector v = bounds[i];
 			boolean inPaddleSpan = paddlePos <= v.x && v.x <= paddlePos+Config.PADDLE_WIDTH; 
-			boolean onTheTop = v.y < 0; //floor negative number = rounding up??
 			boolean outOfCol = v.x < 0 || !(0 <= v.x && v.x < Config.BOARD_WIDTH);
 			if(v.y > Config.BOARD_HEIGHT && !inPaddleSpan) {
 				r[i] = Collision.OUT;
 				return r;
 			}
-			else if ((onTheTop || (v.y > Config.BOARD_HEIGHT && inPaddleSpan)) && outOfCol) {
+			else if ((v.y <= 0 || (v.y > Config.BOARD_HEIGHT && inPaddleSpan)) && outOfCol) {
 				r[i] = Collision.BOTH;
 			}
 			else if (outOfCol) {
 				r[i] = Collision.X;
 			}
-			else if ((v.y > Config.BOARD_HEIGHT && inPaddleSpan)) {
+			else if (v.y <= 0 || (v.y > Config.BOARD_HEIGHT && inPaddleSpan)) {
 				r[i] = Collision.Y;
 			}
 			else {
@@ -196,6 +199,7 @@ public class BreakoutGame implements Runnable {
 			}
 			if(!hasTicked) {
 				blocks[row][col]--;
+				blocksLeft--;
 				hasTicked = true;
 			}
 			Collision colType = getCollisionType(new Vector(col, row), ball.position);

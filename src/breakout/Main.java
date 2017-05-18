@@ -92,7 +92,17 @@ public class Main {
 			frame.repaint();
 		}
 		public void win () {
-			
+			frame.getContentPane().removeAll();
+			JLabel txt = new JLabel(
+				"<html><center>"
+						+ "<font size='70' color='blue'>!You are a winner!</font><br>"
+						+ "<font size='20' color='white'>Close to play again!</font><br>"
+				+"</center><html>"
+			, JLabel.CENTER);
+			txt.setFont(txt.getFont().deriveFont(64f));
+			txt.setBounds(new Rectangle(Config.DIMENSIONS));
+			frame.getContentPane().add(txt);
+			frame.repaint();
 		}
 		public void onUpdate(int[][] newBoard, Vector ballPos, Vector ballVel, double paddlePos) {
 			ballPanel.updateInfo(ballPos, ballVel, paddlePos);
