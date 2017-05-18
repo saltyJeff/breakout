@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 
 public class Main {
 
@@ -77,7 +78,22 @@ public class Main {
 		public void ready() {
 			// System.out.println("We have signs of life");
 		}
-
+		public void lose () {
+			frame.getContentPane().removeAll();
+			JLabel txt = new JLabel(
+				"<html><center>"
+						+ "<font size='70' color='red'>You lost</font><br>"
+						+ "<font size='20' color='white'>Close to play again!</font><br>"
+				+"</center><html>"
+			, JLabel.CENTER);
+			txt.setFont(txt.getFont().deriveFont(64f));
+			txt.setBounds(new Rectangle(Config.DIMENSIONS));
+			frame.getContentPane().add(txt);
+			frame.repaint();
+		}
+		public void win () {
+			
+		}
 		public void onUpdate(int[][] newBoard, Vector ballPos, Vector ballVel, double paddlePos) {
 			ballPanel.updateInfo(ballPos, ballVel, paddlePos);
 			blockPanel.repaint();

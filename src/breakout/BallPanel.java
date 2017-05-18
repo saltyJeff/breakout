@@ -37,6 +37,8 @@ public class BallPanel extends JPanel {
 		int y = (int) (position.y * Config.JPC + velocity.y * guessTicks * Config.RENDER_DELTA);
 		int di = (int) (2*Config.BALL_RADIUS * Config.JPC);
 		g.fillOval(x, y, di, di);
-        g.fillRect((int)(paddlePos*Config.JPC), (int)((Config.BOARD_HEIGHT)*Config.JPC), (int)Config.PADDLE_WIDTH * Config.JPC, (int)Config.PADDLE_HEIGHT * Config.JPC);
+        g.fillRect((int)(paddlePos*Config.JPC), (int)(Config.BOARD_HEIGHT*Config.JPC), (int)(Config.PADDLE_WIDTH * Config.JPC), (int)(Config.PADDLE_HEIGHT * Config.JPC));
+		g.setColor(Color.RED);
+		g.drawLine(0, (int)(Config.BOARD_HEIGHT*Config.JPC), (int)(Config.BOARD_WIDTH*Config.JPC), (int)(Config.BOARD_HEIGHT*Config.JPC));
 	}
 }
