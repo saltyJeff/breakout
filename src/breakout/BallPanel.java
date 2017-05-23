@@ -21,7 +21,6 @@ public class BallPanel extends JPanel {
 		setOpaque(false);
 	}
 	private static final long serialVersionUID = 1591952185726646237L;
-	//INVERT ALL THE Y-VARIABLES (Y U SO STUPID SWING)
 	public void updateInfo(Vector p, Vector v, double pp) {
 		position = p;
 		velocity = v;

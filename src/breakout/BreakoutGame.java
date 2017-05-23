@@ -95,7 +95,7 @@ public class BreakoutGame implements Runnable {
 		}
 		else {
 			Collision[] col2s = collisionCheck();
-			if(inArray(col2s, Collision.BOTH) || (inArray(col2s, Collision.X) && inArray(col2s, Collision.Y))) {
+			if(inArray(col2s, Collision.BOTH) || ((inArray(col2s, Collision.X) && inArray(col2s, Collision.Y)))) {
 				System.out.println("Double collision or has both an x and y");
 				System.out.println(printCollisions(col2s));
 				handleCollision(Collision.BOTH);
@@ -202,7 +202,7 @@ public class BreakoutGame implements Runnable {
 				blocksLeft--;
 				hasTicked = true;
 			}
-			Collision colType = getCollisionType(new Vector(col, row), ball.position);
+			Collision colType = getCollisionType(new Vector(col, row), v);
 			r[i] = colType;
 		}
 		return r;
@@ -215,6 +215,7 @@ public class BreakoutGame implements Runnable {
 		boolean belowLeftDiag = check.y > 1 * (check.x - boxCorner.x) + boxCorner.y;
 		boolean belowRightDiag = check.y > -1 * (check.x - lowerBoxCorner.x) + lowerBoxCorner.y;
 		if(aboveLeftDiag && aboveRightDiag) {
+			System.out.println("Sending an Y");
 			return Collision.Y;
 		}
 		else if(belowLeftDiag && belowRightDiag) {
@@ -227,7 +228,7 @@ public class BreakoutGame implements Runnable {
 			return Collision.X;
 		}
 		else {
-			return null;
+			return Collision.BOTH;
 		}
 	}
 	enum Collision {

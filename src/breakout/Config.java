@@ -7,15 +7,15 @@ public final class Config { //cuz static classes aren't a thing :P
 	public static final int BOARD_WIDTH = 14;
 	public static final int BOARD_HEIGHT = 12;
 	public static final double BALL_RADIUS = 0.1;
-	public static final int PHYSICS_TICK = 1000/80;
+	public static final int PHYSICS_TICK = 1000/110;
 	public static final int RENDER_TICK = 1000/40;
 	public static final int JPC = 60;
 	public static final int MAX_BLOCK = 4;
-	public static final Vector INITIAL_POS = new Vector(0.2,Config.BOARD_HEIGHT - 3);
-	public static final Vector INITIAL_VEL = new Vector(1,1).multiply(10);
+	public static final Vector INITIAL_POS = new Vector(0.5,Config.BOARD_HEIGHT - 3);
+	public static final Vector INITIAL_VEL = new Vector(1,1).multiply(7);
 	public static final double SPEED_FACTOR = 0.02;
     public static final double PADDLE_HEIGHT = 0.7;
-    public static final int PADDLE_WIDTH = 4;
+    public static final int PADDLE_WIDTH = 5;
     public static final int PADDLE_SPEED = 20;
 	//dont touch
 	public static final double PHYSICS_DELTA = PHYSICS_TICK * 0.001;
