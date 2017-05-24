@@ -2,7 +2,9 @@ package breakout;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * A representation of a breakout game
+ */
 public class BreakoutGame implements Runnable {
 
 	private BreakoutCallbacks callback;

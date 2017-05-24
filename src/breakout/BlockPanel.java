@@ -6,7 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.*;
-
+/**
+ * Draws all the blocks
+ */
 public class BlockPanel extends JPanel {
 
 	private static final long serialVersionUID = -1379508343106406529L;

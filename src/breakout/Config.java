@@ -1,7 +1,9 @@
 package breakout;
 
 import java.awt.Dimension;
-
+/**
+ * Configuration constants for the game
+ */
 public final class Config { //cuz static classes aren't a thing :P
 	private Config () {};
 	public static final int BOARD_WIDTH = 14;

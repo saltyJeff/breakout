@@ -1,5 +1,7 @@
 package breakout;
-
+/**
+ * A breakout game ball
+ */
 public class Ball {
 	public Vector position;
 	public Vector velocity;

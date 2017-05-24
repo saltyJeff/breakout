@@ -1,16 +1,12 @@
 package breakout;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RadialGradientPaint;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
 
 import javax.swing.*;
-
+/**
+ * A panel used to show the ball/paddle
+ */
 public class BallPanel extends JPanel {
 	private int guessTicks;
 	private Vector position = Vector.ZERO;
