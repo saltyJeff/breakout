@@ -12,7 +12,7 @@ import javax.swing.text.JTextComponent;
  * @author Jefferson Lee (period 5(
  * @author Aleksander Nelson
  * @author Aarvin Ravikumar
- * @version 0.0.1 EDGY AF
+ * @version 0.0.1 EDGY   AF
  */
 public class Main {
 

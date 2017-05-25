@@ -14,7 +14,8 @@ public class BreakoutGame implements Runnable {
 	private int dir = 0;
 	private double paddlePos = Config.BOARD_WIDTH / 2 - Config.PADDLE_WIDTH;
 	private int status = 0; //0 = normal, -1 = loss, 1 = win
-	private int blocksLeft = 0;
+	public static int blocksLeft = 0;
+        public static int initialBlocks;
 	public void setDir(int newDir) {
 		dir = newDir;
 	}
@@ -30,6 +31,7 @@ public class BreakoutGame implements Runnable {
 				blocksLeft += Config.MAX_BLOCK - r + 2;
 			}
 		}
+                initialBlocks = blocksLeft;
 		callback.ready();
 		while (status == 0) { // edgy
 			if (System.currentTimeMillis() < lastTick + Config.PHYSICS_TICK) {
