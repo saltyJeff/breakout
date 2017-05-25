@@ -88,6 +88,7 @@ public class Main {
 			JLabel txt = new JLabel(
 				"<html><center>"
 						+ "<font size='70' color='red'>You lost</font><br>"
+                                                + "<font size='20' color='green'>Score: " + (BreakoutGame.initialBlocks - BreakoutGame.blocksLeft) + "</font><br>"
 						+ "<font size='20' color='white'>Close to play again!</font><br>"
 				+"</center><html>"
 			, JLabel.CENTER);
@@ -101,7 +102,8 @@ public class Main {
 			JLabel txt = new JLabel(
 				"<html><center>"
 						+ "<font size='70' color='blue'>!You are a winner!</font><br>"
-						+ "<font size='20' color='white'>Close to play again!</font><br>"
+						+ "<font size='20' color='green'>Score: " + (BreakoutGame.initialBlocks - BreakoutGame.blocksLeft) + "</font><br>"
+                                                + "<font size='20' color='white'>Close to play again!</font><br>"
 				+"</center><html>"
 			, JLabel.CENTER);
 			txt.setFont(txt.getFont().deriveFont(64f));
