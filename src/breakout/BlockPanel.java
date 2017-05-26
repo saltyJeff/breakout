@@ -33,7 +33,7 @@ public class BlockPanel extends JPanel {
 				}
 				g.setColor(colors[val-1]);
 				g.fillRect(c * Config.JPC, r * Config.JPC, Config.JPC, Config.JPC);
-				g.setColor(Color.WHITE);
+                                g.setColor(Color.WHITE);
 				g.drawRect(c * Config.JPC, r * Config.JPC, Config.JPC, Config.JPC);
 			}
 		}

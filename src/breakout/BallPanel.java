@@ -12,6 +12,13 @@ public class BallPanel extends JPanel {
 	private Vector position = Vector.ZERO;
 	private Vector velocity = Vector.ZERO;
 	private double paddlePos = 0;
+        private long a = System.currentTimeMillis();
+        /*private JLabel titlegamething = new JLabel(
+				"<html><center>"
+						+ "<font size='30' color='white'>BREAKOUT!DUDNDUNG</font><br>"
+				+"</center><html>"
+			, JLabel.CENTER);
+*/
 	public BallPanel() {
 		super();
 		setOpaque(false);
@@ -35,6 +42,22 @@ public class BallPanel extends JPanel {
                 g.fillRect((int)(paddlePos*Config.JPC), (int)(Config.BOARD_HEIGHT*Config.JPC), (int)(Config.PADDLE_WIDTH * Config.JPC), (int)(Config.PADDLE_HEIGHT * Config.JPC));
 		g.setColor(Color.RED);
 		g.drawLine(0, (int)(Config.BOARD_HEIGHT*Config.JPC)+1, (int)(Config.BOARD_WIDTH*Config.JPC), (int)(Config.BOARD_HEIGHT*Config.JPC)+1);
+                Vector flip = new Vector(velocity);
+                flip = flip.multiply(1/flip.magnitude());
+                flip.x *= -5;
+                flip.y *= -5;
+                g.setColor(Color.WHITE);
+                if(System.currentTimeMillis() - a < 5e3){
+                    
+                    g.drawString("BREAKOUT", (Config.BOARD_WIDTH*Config.JPC)/2 - 70, (Config.BOARD_HEIGHT*Config.JPC)/2);
+                }
+                
+                //g.drawLine((int)(x + Config.BALL_RADIUS*Config.JPC), (int)(y + Config.BALL_RADIUS*Config.JPC), (int)(x + Config.BALL_RADIUS*Config.JPC) + (int)flip.x*Config.JPC, (int)(y + Config.BALL_RADIUS*Config.JPC) + (int)flip.y*Config.JPC);
+                
+                //int [] xPoints = {((int)(x ) + (int)flip.x*Config.JPC),(int)(x + Config.BALL_RADIUS*Config.JPC + Config.BALL_RADIUS*Config.JPC),((int)(x + Config.BALL_RADIUS*Config.JPC+ Config.BALL_RADIUS*Config.JPC) + (int)flip.x*Config.JPC),(int)(x )};
+                //int [] yPoints = {((int)(y ) + (int)flip.y*Config.JPC),(int)(y + Config.BALL_RADIUS*Config.JPC + Config.BALL_RADIUS*Config.JPC),((int)(y + Config.BALL_RADIUS*Config.JPC+ Config.BALL_RADIUS*Config.JPC) + (int)flip.y*Config.JPC),(int)(y )};
+                g.setColor(Color.pink);
+                //g.fillPolygon(xPoints, yPoints, xPoints.length);
                 g.setColor(Color.CYAN);
                 //g.setFont(new Font());
                 g.drawString("Score: " + (BreakoutGame.initialBlocks - BreakoutGame.blocksLeft), (Config.BOARD_WIDTH*Config.JPC)- 70, 20);
